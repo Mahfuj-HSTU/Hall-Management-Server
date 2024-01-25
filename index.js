@@ -3,62 +3,50 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 5000;
 const cors = require('cors');
-const {
-  MongoClient,
-  ServerApiVersion,
-  ObjectId,
-  CURSOR_FLAGS,
-} = require('mongodb');
+const hallsRoute = require('./Routes/hallsRoute');
+const studentsRoute = require('./Routes/studentsRoute');
 
 // middleware
 app.use(cors());
-app.use(express.json({ limit: '100mb' }));
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.mdoqsyi.mongodb.net/?retryWrites=true&w=majority`;
+app.use('/api/halls', hallsRoute);
+app.use('/api/students', studentsRoute);
 
-// console.log(uri);
+// async function run() {
+//   try {
+//     const hallCollection = client.db('HallManagement').collection('halls');
+//     const studentCollection = client
+//       .db('HallManagement')
+//       .collection('students');
 
-// const client = new MongoClient(uri, {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-//   serverApi: ServerApiVersion.v1,
-// });
+//     // get halls
+//     app.get('/halls', async (req, res) => {
+//       const query = {};
+//       const cursor = hallCollection.find(query);
+//       const halls = await cursor.toArray();
+//       res.send(halls);
+//     });
 
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  },
-});
+//     // get hall detail
+//     app.get('/hall/:id', async (req, res) => {
+//       const id = req.params.id;
+//       const query = { _id: new ObjectId(id) };
+//       const hall = await hallCollection.findOne(query);
+//       res.send(hall);
+//     });
 
-async function run() {
-  try {
-    const hallCollection = client.db('HallManagement').collection('halls');
-    const studentCollection = client
-      .db('HallManagement')
-      .collection('students');
+//     // get students
+//     app.get('/students', async (req, res) => {
+//       const query = {};
+//       const cursor = studentCollection.find(query);
+//       const students = await cursor.toArray();
+//       res.send(students);
+//     });
+//   } finally {
+//   }
+// }
 
-    // get halls
-    app.get('/halls', async (req, res) => {
-      const query = {};
-      const cursor = hallCollection.find(query);
-      const halls = await cursor.toArray();
-      res.send(halls);
-    });
-
-    // get hall detail
-    app.get('/hall/:id', async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: new ObjectId(id) };
-      const hall = await hallCollection.findOne(query);
-      res.send(hall);
-    });
-  } finally {
-  }
-}
-
-run().catch((error) => console.log(error));
+// run().catch((error) => console.log(error));
 
 app.get('/', (req, res) => {
   res.send('Hall Management server is running...');
