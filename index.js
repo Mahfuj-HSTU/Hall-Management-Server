@@ -5,12 +5,16 @@ const port = process.env.PORT || 5000;
 const cors = require('cors');
 const hallsRoute = require('./Routes/hallsRoute');
 const studentsRoute = require('./Routes/studentsRoute');
+const usersRoute = require('./Routes/usersRoute');
 
 // middleware
 app.use(cors());
+app.use(express.json());
 
+// api's
 app.use('/api/halls', hallsRoute);
 app.use('/api/students', studentsRoute);
+app.use('/api/users', usersRoute);
 
 // async function run() {
 //   try {

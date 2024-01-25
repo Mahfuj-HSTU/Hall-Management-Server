@@ -16,14 +16,6 @@ const getHallDetails = async (req, res) => {
   res.send(hall);
 };
 
-// const getToolDetails = (req, res) => {
-//   // res.send('tool details');
-//   const { id } = req.params;
-//   console.log(id);
-//   const foundTool = tools.find((tool) => tool.id === Number(id));
-//   res.send(foundTool);
-// };
-
 module.exports = {
   getHalls,
   getHallDetails,
