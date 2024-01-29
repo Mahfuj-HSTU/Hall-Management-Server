@@ -1,3 +1,4 @@
+const { query } = require('express');
 const dbConnect = require('../Utilities/dbConnect');
 
 const userCollection = dbConnect().db('HallManagement').collection('users');
@@ -21,10 +22,16 @@ const postUsers = async (req, res) => {
         .status(400)
         .json({ error: 'Duplicate SID. User with this SID already exists.' });
     }
-
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
-module.exports = { getUsers, postUsers };
+const getUser = async (req, res) => {
+  const email = req.params.email;
+  const query = { email };
+  const user = await userCollection.findOne(query);
+  res.send(user);
+};
+
+module.exports = { getUsers, postUsers, getUser };

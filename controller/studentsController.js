@@ -12,7 +12,7 @@ const getStudents = async (req, res) => {
 
 const getStudentDetails = async (req, res) => {
   const id = req.params.id;
-  console.log(id);
+  // console.log(id);
   const query = { sid: id };
   const student = await studentCollection.findOne(query);
   res.send(student);
