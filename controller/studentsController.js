@@ -35,4 +35,51 @@ const addStudent = async (req, res) => {
   }
 };
 
-module.exports = { getStudents, getStudentDetails, addStudent };
+const updateStudent = async (req, res) => {
+  try {
+    const data = req.body;
+    const sid = data.sid;
+    const query = { sid: sid };
+
+    const updatedStudent = await studentCollection.updateOne(query, {
+      $set: data,
+    });
+
+    if (updatedStudent.modifiedCount === 1) {
+      res.status(200).json({ message: 'Student updated successfully.' });
+    } else {
+      res
+        .status(404)
+        .json({ message: 'Student not found or no changes were made.' });
+    }
+  } catch (error) {
+    console.error('Error updating student:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+// const updateUser = router.put('/update-user', async (req, res) => {
+//   try {
+//     // const { id } = req.query;
+//     const data = req.body;
+//     const memberId = Number(data.memberId);
+
+//     const query = { memberId: memberId };
+//     // console.log(memberId);
+
+//     const updateUser = await userSchema.findOneAndUpdate(query, data);
+//     if (data.releaseStatus) {
+//       const deletedBalance = await balanceSchema.deleteMany(query);
+//       res.status(201).send({ updateUser, deletedBalance });
+//     } else {
+//       res.status(201).send(updateUser);
+//     }
+//     // console.log(data.releaseStatus);
+//     // res.send(result);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send({ message: error.message });
+//   }
+// });
+
+module.exports = { getStudents, getStudentDetails, addStudent, updateStudent };
