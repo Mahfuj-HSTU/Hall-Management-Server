@@ -18,4 +18,21 @@ const getStudentDetails = async (req, res) => {
   res.send(student);
 };
 
-module.exports = { getStudents, getStudentDetails };
+const addStudent = async (req, res) => {
+  const query = req.body;
+  try {
+    await studentCollection.createIndex({ sid: 1 }, { unique: true });
+    const result = await studentCollection.insertOne(query);
+    res.send(result);
+  } catch (error) {
+    if (error.code === 11000 && error.keyPattern && error.keyPattern.sid) {
+      return res
+        .status(400)
+        .json({ error: 'Duplicate SID. User with this SID already exists.' });
+    }
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+module.exports = { getStudents, getStudentDetails, addStudent };

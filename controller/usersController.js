@@ -56,7 +56,7 @@ const deleteUser = async (req, res) => {
     } else {
       res.status(404).send({
         message:
-          'User not found or could not be deleted from both collections.',
+          'User not found or could not be deleted from both collections may be delte from one collection',
       });
     }
   } catch (error) {
