@@ -11,32 +11,49 @@ const getApplications = async (req, res) => {
   const applications = await cursor.toArray();
   res.send(applications);
 };
+
 const addApplication = async (req, res) => {
-  const query = req.body;
   try {
-    await applicationCollection.createIndex({ sid: 1 }, { unique: true });
-    const result = await applicationCollection.insertOne(query);
-    res.send(result);
-  } catch (error) {
-    if (error.code === 11000 && error.keyPattern && error.keyPattern.sid) {
-      return res
-        .status(400)
-        .json({ error: 'Duplicate SID. User with this SID already exists.' });
+    const data = req.body;
+    const sid = data.sid;
+    const type = data.type;
+
+    const existingApplications = await applicationCollection
+      .find({ sid })
+      .toArray();
+
+    if (existingApplications.length === 2) {
+      const [firstApplication, secondApplication] = existingApplications;
+
+      if (type === firstApplication.type) {
+        // Update the first application
+        const filter = { _id: firstApplication._id };
+        const updateDoc = { $set: data };
+        await applicationCollection.updateOne(filter, updateDoc);
+        return res.json({ message: 'Application updated.' });
+      } else if (type === secondApplication.type) {
+        // Update the second application
+        const filter = { _id: secondApplication._id };
+        const updateDoc = { $set: data };
+        await applicationCollection.updateOne(filter, updateDoc);
+        return res.json({ message: 'Application updated.' });
+      } else {
+        return res.status(400).json({
+          error:
+            'Cannot update application. New type does not match existing types.',
+        });
+      }
+    } else {
+      const result = await applicationCollection.insertOne(data);
+      return res.send(result);
     }
-    console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+  } catch (error) {
+    console.error('Error adding application:', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
 };
-// const getHallDetails = async (req, res) => {
-//   const id = req.params.id;
-//   const query = { _id: new ObjectId(id) };
-//   const hall = await hallCollection.findOne(query);
-//   res.send(hall);
-// };
 
 module.exports = {
   getApplications,
   addApplication,
-  //   getHalls,
-  //   getHallDetails,
 };
