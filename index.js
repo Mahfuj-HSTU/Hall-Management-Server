@@ -6,6 +6,7 @@ const cors = require('cors');
 const hallsRoute = require('./Routes/hallsRoute');
 const studentsRoute = require('./Routes/studentsRoute');
 const usersRoute = require('./Routes/usersRoute');
+const applicationRoute=require('./Routes/applicationRoute');
 
 // middleware
 app.use(cors());
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use('/api/halls', hallsRoute);
 app.use('/api/students', studentsRoute);
 app.use('/api/users', usersRoute);
+app.use('/api/applications',applicationRoute);
 
 // async function run() {
 //   try {
