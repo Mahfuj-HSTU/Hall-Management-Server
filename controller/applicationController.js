@@ -93,8 +93,17 @@ const updateApplication = async (req, res) => {
   }
 };
 
+const getUserApplication = async (req, res) => {
+  const id = req.params.id;
+  // console.log(id);
+  const query = { sid: id };
+  const student = await applicationCollection.find(query).toArray();
+  res.send(student);
+};
+
 module.exports = {
   getApplications,
   addApplication,
   updateApplication,
+  getUserApplication,
 };

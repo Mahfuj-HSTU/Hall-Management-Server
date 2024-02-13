@@ -6,5 +6,6 @@ router
   .get(applicationController.getApplications)
   .post(applicationController.addApplication)
   .put(applicationController.updateApplication);
+router.route('/:id').get(applicationController.getUserApplication);
 
 module.exports = router;
