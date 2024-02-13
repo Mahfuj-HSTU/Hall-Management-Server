@@ -4,8 +4,10 @@ const applicationController = require('../controller/applicationController');
 router
   .route('/')
   .get(applicationController.getApplications)
-  .post(applicationController.addApplication)
+  .post(applicationController.addApplication);
+router
+  .route('/:id')
+  .get(applicationController.getUserApplication)
   .put(applicationController.updateApplication);
-router.route('/:id').get(applicationController.getUserApplication);
 
 module.exports = router;

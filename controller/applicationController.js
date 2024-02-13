@@ -72,8 +72,8 @@ const addApplication = async (req, res) => {
 const updateApplication = async (req, res) => {
   try {
     const data = req.body;
-    const sid = data.sid;
-    const query = { sid: sid };
+    const id = req.params.id;
+    const query = { _id: new ObjectId(id) };
     delete data?._id;
 
     const updatedApplication = await applicationCollection.updateOne(query, {
