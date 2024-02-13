@@ -69,7 +69,32 @@ const addApplication = async (req, res) => {
   }
 };
 
+const updateApplication = async (req, res) => {
+  try {
+    const data = req.body;
+    const sid = data.sid;
+    const query = { sid: sid };
+    delete data?._id;
+
+    const updatedApplication = await applicationCollection.updateOne(query, {
+      $set: data,
+    });
+
+    if (updatedApplication.modifiedCount === 1) {
+      res.status(200).json({ message: 'Application updated successfully.' });
+    } else {
+      res
+        .status(404)
+        .json({ message: 'Application not found or no changes were made.' });
+    }
+  } catch (error) {
+    console.error('Error updating Application:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
 module.exports = {
   getApplications,
   addApplication,
+  updateApplication,
 };
