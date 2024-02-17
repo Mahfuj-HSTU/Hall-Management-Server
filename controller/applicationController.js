@@ -24,7 +24,7 @@ const addApplication = async (req, res) => {
     const existingApplications = await applicationCollection
       .find({ sid })
       .toArray();
-    console.log(data);
+    // console.log(data);
 
     const [firstApplication, secondApplication] = existingApplications;
     if (existingApplications.length === 2) {
