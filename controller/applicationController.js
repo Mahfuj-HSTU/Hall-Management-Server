@@ -19,12 +19,11 @@ const addApplication = async (req, res) => {
     const type = data?.type;
     const currentDate = new Date();
     delete data?._id;
-    // console.log(data);
+    // console.log('data', data);
 
     const existingApplications = await applicationCollection
       .find({ sid })
       .toArray();
-    // console.log(data);
 
     const [firstApplication, secondApplication] = existingApplications;
     if (existingApplications.length === 2) {
@@ -97,8 +96,10 @@ const getUserApplication = async (req, res) => {
   const id = req.params.id;
   // console.log(id);
   const query = { sid: id };
-  const student = await applicationCollection.find(query).toArray();
-  res.send(student);
+  const cursor = applicationCollection.find(query);
+  const applications = await cursor.toArray();
+  // console.log(applications);
+  res.send(applications);
 };
 
 module.exports = {
