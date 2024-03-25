@@ -22,7 +22,9 @@ const addStudent = async (req, res) => {
         .status(400)
         .send('Adding these IDs will exceed the limit of 4 students per room.');
     }
-    roomToUpdate.ids.push(...ids);
+    const intId = ids.map((id) => parseInt(id, 10));
+
+    roomToUpdate.ids.push(...intId);
     await roomCollection.updateOne(
       { room, hall },
       { $set: { ids: roomToUpdate.ids } },

@@ -40,6 +40,7 @@ const updateStudent = async (req, res) => {
     const data = req.body;
     const sid = data.sid;
     const query = { sid: sid };
+    delete data?._id;
 
     const updatedStudent = await studentCollection.updateOne(query, {
       $set: data,
