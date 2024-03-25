@@ -8,7 +8,8 @@ const studentsRoute = require('./Routes/studentsRoute');
 const usersRoute = require('./Routes/usersRoute');
 const applicationRoute = require('./Routes/applicationRoute');
 const noticeRoute = require('./Routes/noticeRoute');
-const administrationRoute=require('./Routes/administrationRoute')
+const administrationRoute = require('./Routes/administrationRoute');
+const roomAllocationRoute = require('./Routes/roomAllocationRoute');
 
 // middleware
 app.use(cors());
@@ -20,8 +21,8 @@ app.use('/api/students', studentsRoute);
 app.use('/api/users', usersRoute);
 app.use('/api/applications', applicationRoute);
 app.use('/api/notice', noticeRoute);
-app.use('/api/administration',administrationRoute);
-
+app.use('/api/administration', administrationRoute);
+app.use('/api/rooms', roomAllocationRoute);
 
 // async function run() {
 //   try {
