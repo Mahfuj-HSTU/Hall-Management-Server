@@ -8,6 +8,7 @@ router
 router
   .route('/:id')
   .get(applicationController.getUserApplication)
-  .put(applicationController.updateApplication);
+  .put(applicationController.updateApplication)
+  .delete(applicationController.deleteApplication);
 
 module.exports = router;

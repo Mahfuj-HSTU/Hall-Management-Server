@@ -38,7 +38,33 @@ const addStudent = async (req, res) => {
   }
 };
 
+const removeStudent = async (req, res) => {
+  try {
+    const { room, hall, id } = req.body;
+    // console.log(req.body);
+    let roomToUpdate = await roomCollection.findOne({ room, hall });
+    const indexNo = roomToUpdate.ids.indexOf(parseInt(id));
+
+    if (indexNo !== -1) {
+      roomToUpdate.ids.splice(indexNo, 1);
+    } else {
+      return res.status(404).send('ID not found in the room.');
+    }
+
+    await roomCollection.updateOne(
+      { room, hall },
+      { $set: { ids: roomToUpdate.ids } }
+    );
+
+    res.status(200).send('ID removed successfully');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error removing ID');
+  }
+};
+
 module.exports = {
   getRooms,
   addStudent,
+  removeStudent,
 };
