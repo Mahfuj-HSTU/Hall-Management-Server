@@ -10,6 +10,13 @@ const getRooms = async (req, res) => {
   res.send(rooms);
 };
 
+const addRoom = async (req, res) => {
+  const data = req.body;
+  const room = await roomCollection.insertOne(data);
+  // console.log(room);
+  res.send(room);
+};
+
 const addStudent = async (req, res) => {
   try {
     const { room, hall, ids } = req.body;
@@ -67,4 +74,5 @@ module.exports = {
   getRooms,
   addStudent,
   removeStudent,
+  addRoom,
 };

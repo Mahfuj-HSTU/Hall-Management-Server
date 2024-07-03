@@ -5,6 +5,7 @@ router
   .route('/')
   .get(roomController.getRooms)
   .put(roomController.addStudent)
-  .delete(roomController.removeStudent);
+  .delete(roomController.removeStudent)
+  .post(roomController.addRoom);
 
 module.exports = router;
