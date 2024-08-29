@@ -46,7 +46,7 @@ const updateStudent = async (req, res) => {
       $set: data,
     });
 
-    if (updatedStudent.modifiedCount === 1) {
+    if (updatedStudent.acknowledged === true) {
       res.status(200).json({ message: 'Student updated successfully.' });
     } else {
       res

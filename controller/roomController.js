@@ -11,10 +11,22 @@ const getRooms = async (req, res) => {
 };
 
 const addRoom = async (req, res) => {
-  const data = req.body;
-  const room = await roomCollection.insertOne(data);
-  // console.log(room);
-  res.send(room);
+  const { hall, room } = req.body;
+
+  // Check if the room already exists in the same hall
+  const existingRoom = await roomCollection.findOne({ hall, room });
+
+  if (existingRoom) {
+    // If a room with the same number already exists in the same hall, return an error
+    return res
+      .status(400)
+      .send({ message: 'Room already exists in this hall' });
+  }
+
+  // If the room is unique within the hall, insert the new room
+  const result = await roomCollection.insertOne(req.body);
+
+  res.send(result);
 };
 
 const addStudent = async (req, res) => {
