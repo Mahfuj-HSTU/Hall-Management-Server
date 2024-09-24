@@ -60,25 +60,44 @@ const addStudent = async (req, res) => {
 const removeStudent = async (req, res) => {
   try {
     const { room, hall, id } = req.body;
-    // console.log(req.body);
-    let roomToUpdate = await roomCollection.findOne({ room, hall });
-    const indexNo = roomToUpdate.ids.indexOf(parseInt(id));
 
-    if (indexNo !== -1) {
-      roomToUpdate.ids.splice(indexNo, 1);
-    } else {
-      return res.status(404).send('ID not found in the room.');
+    // Find the room and hall combination
+    let roomToUpdate = await roomCollection.findOne({ room, hall });
+    if (!roomToUpdate) {
+      return res.status(404).json({ error: 'Room not found.' });
     }
 
-    await roomCollection.updateOne(
+    // Ensure both `id` and `ids` array elements are strings for comparison
+    const targetId = id.toString().trim();
+
+    // Use findIndex to locate the ID, ignoring type differences
+    const indexNo = roomToUpdate.ids.findIndex(
+      (storedId) => storedId.toString().trim() === targetId
+    );
+    // console.log('Index of ID:', indexNo);
+
+    if (indexNo !== -1) {
+      // Remove the student id from the array
+      roomToUpdate.ids.splice(indexNo, 1);
+    } else {
+      return res.status(404).json({ error: 'ID not found in the room.' });
+    }
+
+    // Update the room document in the collection
+    const result = await roomCollection.updateOne(
       { room, hall },
       { $set: { ids: roomToUpdate.ids } }
     );
 
-    res.status(200).send('ID removed successfully');
+    if (result.modifiedCount === 0) {
+      return res.status(500).json({ error: 'Failed to update room.' });
+    }
+
+    // Send a success response
+    res.status(200).json({ message: 'ID removed successfully', roomToUpdate });
   } catch (err) {
     console.error(err);
-    res.status(500).send('Error removing ID');
+    res.status(500).json({ error: 'Error removing ID' });
   }
 };
 
